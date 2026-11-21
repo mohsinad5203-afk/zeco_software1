@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ZECO Factory</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Naskh+Arabic:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0a0a0a;--surf:#161616;--ink:#f2f2f2;--mute:#a0a0a0;--line:#2c2c2c;--side:#000;--sideink:#bdbdbd;--acc:#e0202e;--ok:#3fbf75;--warn:#f0a23b;--info:#9db4c6;--red:#ff3b47;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
+
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 Manrope,system-ui,sans-serif;display:flex;min-height:100vh}
+aside{width:210px;background:var(--side);color:var(--sideink);padding:22px 14px;position:sticky;top:0;height:100vh;flex-shrink:0}
+.brand{font-weight:800;font-size:18px;color:#fff;padding:0 10px 22px}
+.brand small{display:block;font-weight:500;font-size:12px;color:var(--sideink)}
+nav button{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;font-weight:500;padding:10px;border-radius:6px;cursor:pointer;margin-bottom:2px}
+nav button:hover{background:rgba(255,255,255,.07)}
+nav button.on{background:rgba(255,255,255,.13);color:#fff;font-weight:700;box-shadow:inset 3px 0 0 var(--acc)}
+main{flex:1;padding:26px 30px;min-width:0}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+h1{font-size:24px;margin:0;font-weight:800}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input,select{font:inherit;color:var(--ink);background:var(--surf);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+:focus-visible{outline:2px solid var(--info);outline-offset:2px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.stat{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:14px}
+.stat b{display:block;font-size:22px;font-weight:800}.stat span{color:var(--mute);font-size:13px}
+.box{background:var(--surf);border:1px solid var(--line);border-radius:8px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:620px}
+th{text-align:left;font-weight:700;font-size:13px;color:var(--mute);padding:11px 14px;border-bottom:1px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--bg)}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700;border:1px solid currentColor}
+.t-vip{color:var(--acc)}.t-regular{color:var(--info)}.t-new{color:var(--mute)}
+.s-pending{color:var(--warn)}.s-packed{color:var(--info)}.s-shipped{color:var(--info)}.s-delivered{color:var(--ok)}.s-cancelled{color:var(--red)}
+.low{color:var(--red);font-weight:700}
+.bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;min-width:90px}.bar i{display:block;height:100%;background:var(--info)}
+.fl label{display:block;font-weight:700;font-size:13px;margin:10px 0 4px}.fl input,.fl select{width:100%}.fl .btn{margin-top:12px}.note{color:var(--ok);font-size:13px;min-height:20px;margin:8px 0 0}.how ol{margin:0;padding-left:20px}.how li{margin:0 0 9px}.how p{margin:12px 0 8px;color:var(--mute);font-size:13px}
+dialog{border:1px solid var(--line);border-radius:10px;background:var(--surf);color:var(--ink);padding:20px;width:min(420px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog label{display:block;font-weight:700;font-size:13px;margin:10px 0 4px}dialog input,dialog select{width:100%}
+.empty{padding:30px;text-align:center;color:var(--mute)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.cols .box{padding:16px}.cols h3{margin:0 0 12px;font-size:15px}
+.rb{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:14px}.rb span:first-child{width:110px}.rb .bar{flex:1}
+@media(max-width:760px){body{flex-direction:column}aside{width:100%;height:auto;position:static;padding:12px}.brand{padding-bottom:8px}nav{display:flex;gap:4px;overflow-x:auto}nav button{width:auto;white-space:nowrap}nav button.on{box-shadow:inset 0 -3px 0 var(--acc)}main{padding:18px 14px}}
+.qty{width:74px;padding:5px 7px}.qty.low{border-color:var(--red);color:var(--red);font-weight:700}.act{display:flex;gap:6px}.btn.sm{padding:5px 10px;font-size:13px}.btn.danger{color:var(--red);border-color:var(--red)}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+aside{display:flex;flex-direction:column}
+.who{margin-top:auto;padding:14px 10px 0;border-top:1px solid rgba(255,255,255,.1);font-size:13px}
+.who b{display:block;color:#fff;font-size:14px}.who span{display:block;margin-bottom:8px}
+.who .btn{color:#fff;border-color:rgba(255,255,255,.25);margin:0 4px 4px 0}
+#login{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
+#lbox{width:min(380px,100%);background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:26px}
+#lbox h2{margin:0 0 4px;font-size:22px;font-weight:800}#lbox p.sub{margin:0 0 8px;color:var(--mute);font-size:13px}
+#lbox label{display:block;font-weight:700;font-size:13px;margin:12px 0 4px}#lbox input{width:100%}#lbox .btn{width:100%;margin-top:16px}
+.err{color:var(--red);font-size:13px;min-height:20px;margin:8px 0 0}
+.tag.t-admin{color:var(--info)}.tag.t-super_admin{color:var(--acc)}.tag.t-user{color:var(--mute)}.tag.t-off{color:var(--red)}
+.ur{font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic',Tahoma,serif;line-height:2.1}
+.ur table{min-width:0}.ur th,.ur td{text-align:center}.ur td.dt{text-align:right}
+.kr{color:var(--red)}.kg{color:var(--ok)}.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.pgr{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0}.pgr b{min-width:110px;text-align:center}
+.dyl{padding:4px 14px;border-top:1px dashed var(--line);color:var(--red);font-size:14px}
+.kft{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 14px;border-top:2px solid var(--ink);font-weight:700}
+.brand{display:flex;align-items:center;gap:10px}.brand img{width:44px;height:44px;border-radius:50%}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.chip{font:inherit;font-size:20px;padding:2px 20px;border:1px solid var(--line);border-radius:999px;background:var(--surf);color:var(--ink);cursor:pointer}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+#vk{display:none;position:fixed;left:0;right:0;bottom:0;z-index:99;background:var(--surf);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 18px #0003;direction:rtl}
+#vk.on{display:block}#vk .r{display:flex;gap:4px;margin-bottom:5px}
+#vk button{flex:1;min-width:0;height:46px;padding:0;font:500 21px 'Noto Naskh Arabic',Tahoma,sans-serif;line-height:1;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);cursor:pointer}
+#vk button.w{flex:5;font-size:15px}#vk button.m{flex:1.5;font-size:15px}
+body.vkb{padding-bottom:290px}
+[hidden]{display:none!important}
+#pa{display:none}.phd{display:flex;align-items:center;gap:10px;margin-bottom:12px}.phd img{width:44px;height:44px;border-radius:50%}
+@media print{
+  body.printing>*:not(#pa){display:none!important}
+  body.printing{background:#fff!important;padding:0!important}
+  body.printing #pa,body.printing #pa *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.printing #pa{display:block!important;background:#fff;color:#111;padding:8px;--ink:#111;--mute:#555;--line:#ccc;--surf:#fff;--bg:#fff;--red:#b3261e;--ok:#1c7a46}
+  #pa button,#pa .act{display:none!important}#pa .box{box-shadow:none;border:1px solid #ccc;background:#fff;color:#111}
+  #pa .stats{display:flex;gap:10px;flex-wrap:wrap}#pa .cols{display:block}
+}
+.gl{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:0 0 10px}.gh{display:flex;justify-content:space-between;align-items:center}.gt{font-weight:700;font-size:18px;margin:6px 0 12px}
+#bpaper{background:#fff;color:#111;--ink:#111;--line:#d5d9de;--surf:#fff;overflow:hidden}
+</style>
+</head>
+<body>
+<div id="login"><div id="lbox" style="display:none"><img src="/logo.jpg" alt="" style="width:64px;height:64px;border-radius:50%;display:block;margin:0 auto 8px"><h2>ZECO</h2><p class="sub">Factory khata &amp; cheques &ndash; log in</p>
+<form id="lfrm"><label for="lu">Username</label><input id="lu" autocomplete="username" autocapitalize="off" spellcheck="false" required><label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password" required><p class="err" id="lerr" role="alert"></p><button class="btn" type="submit">Login</button></form></div></div>
+<aside>
+  <div class="brand"><img src="/logo.jpg" alt=""><div>ZECO<small>Factory khata &amp; cheques</small></div></div>
+  <nav id="nav"></nav>
+  <div class="who" id="who"></div>
+</aside>
+<main>
+  <header><h1 id="title"></h1><div class="row" id="tools"></div></header>
+  <div id="view"></div>
+</main>
+
+<dialog id="dlg"><form method="dialog" id="frm" style="margin:0"></form></dialog>
+
+<div id="vk" aria-hidden="true"></div>
+<script>var APP_BASE="/";</script>
+<script>
+// ---------- Data now comes from the server (SQLite) ----------
+var customers=[],rep=null,days=7,loaded=false;
+var tab="Khata",q="",formKind="",editId=0,wmsg="";
+var me=null,users=[],pwForced=false,TABS=[];
+var khBal=[],cheques=[],khId=0,khRows=[],khPage=1,KPER=15,KL={dilai:"ڈھلائی",wasool:"وصول",wapsi:"واپسی"};
+// Tabs by role: a user does not see Inventory or Reports; Users is for the super admin only
+var ROLE_TABS={user:["Khata","Bill","Gate Pass","Parties","Cheques"],admin:["Khata","Bill","Gate Pass","Parties","Cheques","Reports"],super_admin:["Khata","Bill","Gate Pass","Parties","Cheques","Reports","Users"]};
+var ROLE_LABEL={super_admin:"Super admin",admin:"Admin",user:"User"};
+var isStaff=function(){return !!me&&(me.role=="admin"||me.role=="super_admin")};
+function slug(x){return x.toLowerCase().replace(/ /g,"-")}
+var $=function(i){return document.getElementById(i)};
+var rs=function(n){return "Rs "+Number(n).toLocaleString()};
+var esc=function(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML};
+var escA=function(s){return esc(s).replace(/"/g,"&quot;")};
+var fmtDate=function(s){var d=new Date(s.replace(" ","T")+"Z");return isNaN(d)?s:d.toLocaleDateString("en-GB",{day:"numeric",month:"short"})};
+
+function api(method,url,body){
+  return fetch(APP_BASE+url.replace(/^\//,""),{method:method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"threadbook"},body:body?JSON.stringify(body):undefined})
+    .then(function(r){return r.json().catch(function(){return {}}).then(function(d){
+      if(r.status==401&&me)showLogin("Your session has ended. Please log in again.");
+      if(r.status==403&&d.code=="must_change")showPwForm(true);
+      if(!r.ok){var e=new Error(d.error||"Server error");e.status=r.status;throw e}
+      return d})});
+}
+function fail(e){alert(e.message)}
+function reload(){
+  if(!me||me.must_change)return Promise.resolve();
+  return Promise.all([api("GET","/api/customers"),isStaff()?api("GET","/api/reports?days="+days):Promise.resolve(null),
+      me.role=="super_admin"?api("GET","/api/users"):Promise.resolve([]),api("GET","/api/khata/balances"),api("GET","/api/cheques"),api("GET","/api/products"),
+      khId?api("GET","/api/khata/"+khId):Promise.resolve([]),api("GET","/api/gatepass")])
+    .then(function(r){customers=r[0];rep=r[1];users=r[2];khBal=r[3];cheques=r[4];PRODUCTS=r[5];khRows=r[6];gps=r[7];loaded=true;render()})
+    .catch(function(e){if(!me)return;$("view").innerHTML='<div class="box"><div class="empty">'+(e.status?esc(e.message):'Could not connect to the server. Check that PHP is running and the <b>data</b> folder is writable.<br><small>'+esc(e.message)+'</small>')+'</div></div>'});
+}
+
+function nav(){$("nav").innerHTML=TABS.map(function(t){return '<button class="'+(t==tab?'on':'')+'" onclick="go(\''+t+'\')">'+t+'</button>'}).join("")}
+function go(t){tab=t;q="";if(location.hash!=="#"+slug(t))location.hash=slug(t);render()}
+function search(v){q=v.toLowerCase();render(true)}
+function setDays(v){days=+v;reload()}
+
+function render(keep){
+  nav();$("title").textContent=tab;
+  var add={Parties:"Add party",Cheques:"Add cheque",Users:"Add user"}[tab];
+  if(!keep){
+    var tools="";
+    if(tab=="Parties")tools+='<input id="s" dir="auto" placeholder="Search parties" oninput="search(this.value)" aria-label="Search">';
+    if(tab=="Reports")tools+='<select onchange="setDays(this.value)" aria-label="Period">'+[[1,"Today (daily)"],[7,"Last 7 days"],[30,"Last 30 days (monthly)"],[0,"All time"]].map(function(o){return '<option value="'+o[0]+'"'+(o[0]==days?' selected':'')+'>'+o[1]+'</option>'}).join("")+'</select>';
+    if(add)tools+='<button class="btn" onclick="openForm()">'+add+'</button>';
+    $("tools").innerHTML=tools;
+  }
+  if(!loaded){$("view").innerHTML='<div class="box"><div class="empty">Loading…</div></div>';return}
+  $("view").innerHTML=({Khata:vKhata,Bill:vBill,"Gate Pass":vGate,Parties:vParty,Cheques:vCheq,Reports:vRep,Users:vUsers})[tab]();
+}
+function vParty(){
+  var l=customers.filter(function(c){return (c.name+c.city+c.phone).toLowerCase().indexOf(q)>-1});
+  var due=customers.reduce(function(a,c){return a+(c.due>0?c.due:0)},0);
+  var h='<div class="stats"><div class="stat"><b>'+customers.length+'</b><span>Parties</span></div><div class="stat"><b>'+rs(due)+'</b><span>Total baqaya (to receive)</span></div></div>';
+  if(!l.length)return h+'<div class="box"><div class="empty">No parties found. Click Add party.</div></div>';
+  return h+'<div class="box"><table><thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Baqaya</th><th></th></tr></thead><tbody>'+l.map(function(c){
+    return '<tr><td class="ur"><b>'+esc(c.name)+'</b></td><td>'+esc(c.phone)+'</td><td class="ur">'+esc(c.city)+'</td><td>'+(c.due?rs(c.due):'–')+'</td><td><div class="act"><button class="btn ghost sm" onclick="openKhata('+c.id+')">Khata</button>'+(isStaff()?'<button class="btn ghost sm" onclick="openForm(\'Parties\','+c.id+')">Edit</button><button class="btn ghost sm danger" onclick="delParty('+c.id+')">Delete</button>':'')+'</div></td></tr>'}).join("")+'</tbody></table></div>';
+}
+function delParty(id){var c=customers.filter(function(x){return x.id==id})[0];if(!c||!confirm("Delete "+c.name+"?"))return;api("DELETE","/api/customers/"+id).then(reload).catch(fail)}
+function openKhata(id){tab="Khata";location.hash="khata";khId=+id;khPage=1;khRows=[];api("GET","/api/khata/"+id).then(function(r){khRows=r;render()}).catch(fail)}
+function bar(name,v,max,label){return '<div class="rb"><span>'+esc(name)+'</span><div class="bar"><i style="width:'+(max?v/max*100:0)+'%"></i></div><span>'+label+'</span></div>'}
+function vRep(){
+  if(!rep)return '<div class="empty">Loading…</div>';
+  var pm=Math.max.apply(null,rep.parties.map(function(p){return p.total}).concat([0])),dmx=Math.max.apply(null,rep.daily.map(function(x){return x.kg}).concat([0]));
+  var label={1:"today",7:"last 7 days",30:"last 30 days",0:"all time"}[rep.days]||("last "+rep.days+" days"),c=rep.cheques;
+  return '<div id="rep"><div class="stats"><div class="stat"><b>'+rs(rep.dilai_amt)+'</b><span>Dhalai, '+label+' ('+nf(rep.dilai_kg)+' kg)</span></div><div class="stat"><b>'+rs(rep.wasool)+'</b><span>Wasool</span></div><div class="stat"><b>'+rs(rep.wapsi)+'</b><span>Wapsi</span></div><div class="stat"><b>'+rs(rep.balance)+'</b><span>Total baqaya (all time)</span></div></div>'
+   +'<div class="cols"><div class="box"><h3>Top parties (dhalai)</h3>'+(rep.parties.length?rep.parties.map(function(p){return bar(p.name,p.total,pm,rs(p.total))}).join(""):'<div class="empty">No dilai in this period.</div>')+'</div>'
+   +'<div class="box"><h3>Daily dhalai (kg)</h3>'+(rep.daily.length?rep.daily.map(function(x){return bar(dm(x.d).slice(0,5),x.kg,dmx,nf(x.kg))}).join(""):'<div class="empty">No dilai in this period.</div>')+'</div>'
+   +'<div class="box"><h3>Cheques</h3><p style="margin:0">Pending: <b>'+c.n+'</b> ('+rs(c.amt)+')<br>To pay within 30 days: <b>'+rs(c.soon)+'</b><br>Overdue: <b class="'+(c.overdue?'low':'')+'">'+c.overdue+'</b></p></div>'
+   +'</div></div>'+repBtns();
+}
+
+// ---------- Khata (Urdu ledger) + Cheques ----------
+var todayS=function(){return new Date().toISOString().slice(0,10)};
+var nf=function(n){return Number(n||0).toLocaleString("en")};
+var dm=function(d){var p=String(d).split("-");return p.length==3?p[2]+"/"+p[1]+"/"+p[0]:d};
+function khSel(id){khId=+id;khPage=1;khRows=[];if(!khId){render(true);return}api("GET","/api/khata/"+khId).then(function(r){khRows=r;render(true)}).catch(fail)}
+function khCalc(){
+  var pages=Math.max(1,Math.ceil(khRows.length/KPER));if(khPage>pages)khPage=pages;if(khPage<1)khPage=1;
+  var st=(khPage-1)*KPER,rows=khRows.slice(st,st+KPER),dk={},days=[],out=0,inn=0,paid=0;
+  khRows.forEach(function(e){if(e.kind=="dilai"){dk[e.entry_date]=(dk[e.entry_date]||0)+e.weight;out+=e.amount;if(e.paid)paid+=e.amount}else inn+=e.amount});
+  rows.forEach(function(e){if(e.kind=="dilai"&&days.indexOf(e.entry_date)<0)days.push(e.entry_date)});
+  return {pages:pages,st:st,rows:rows,dk:dk,days:days,out:out,inn:inn,paid:paid};
+}
+function khTxt(e){return (e.kind=="dilai"?khParty():KL[e.kind])+(e.detail?" — "+e.detail:"")+(e.kind=="dilai"&&e.paid?" — ✓ پیڈ"+(e.pay_method?" ("+e.pay_method+")":""):"")}
+function khParty(){var c=customers.filter(function(x){return x.id==khId})[0];return c?c.name:""}
+function vKhata(){
+  var h='<div class="box" style="padding:16px"><div class="row"><b>Party</b><select onchange="khSel(this.value)"><option value="0">— select party —</option>'+customers.map(function(c){var b=khBal.filter(function(x){return x.customer_id==c.id})[0];return '<option value="'+c.id+'"'+(c.id==khId?' selected':'')+'>'+esc(c.name)+(b?' · Rs '+nf(b.out-b.inn):'')+'</option>'}).join("")+'</select><small style="color:var(--mute)">Each party has its own ledger, starting from page 1.</small></div></div>';
+  if(!khId)return h+'<div class="box" style="margin-top:14px"><div class="empty">Select a party to open its khata.</div></div>';
+  var k=khCalc();
+  h+='<div class="box ur fl" dir="rtl" lang="ur" style="padding:16px;margin-top:14px"><h3 style="margin:0 0 6px;font-size:16px">نیا اندراج — '+esc(khParty())+'</h3>'
+   +'<div><div><label>تاریخ</label><input id="k1" type="date" value="'+todayS()+'"></div></div>'
+      +'<label>پروڈکٹ</label>'+chipBox("khPick","")+'<label>تفصیل</label><input id="k3" dir="auto" autocomplete="off">'
+   +'<div class="three"><div><label>وزن (کلو)</label><input id="k4" type="number" step="any" min="0" oninput="khAuto()"></div><div><label>ریٹ</label><input id="k5" type="number" step="any" min="0" oninput="khAuto()"></div><div><label>قیمت</label><input id="k6" type="number" step="any" min="0"></div></div>'
+   +'<div class="row" style="margin-top:12px"><button class="btn" onclick="saveKh()">محفوظ کریں</button></div></div>';
+  h+='<div class="pgr"><button class="btn ghost sm" onclick="khGo(1)">▶</button><b class="ur">صفحہ '+khPage+' / '+k.pages+'</b><button class="btn ghost sm" onclick="khGo(-1)">◀</button></div>';
+  h+='<div class="box ur" id="kbox" dir="rtl" lang="ur"><div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center"><b>'+esc(khParty())+'</b><b>صفحہ نمبر '+khPage+'</b></div><table><thead><tr><th>نمبر</th><th>تفصیل</th><th>وزن</th><th>رقم</th><th></th></tr></thead><tbody>'
+   +(k.rows.length?k.rows.map(function(e,i){return '<tr class="'+(e.kind=="dilai"&&!e.paid?'kr':'kg')+'"><td>'+(k.st+i+1)+'</td><td class="dt">'+esc(khTxt(e))+' <small>'+dm(e.entry_date)+'</small></td><td>'+(e.weight?nf(e.weight):'—')+'</td><td>'+nf(e.amount)+'</td><td>'+(e.kind=="dilai"?(e.paid?'<button class="btn ghost sm" onclick="khPaid('+e.id+',false,\'\')">ادا شدہ ہٹائیں</button> ':'<select class="sm" onchange="khPaid('+e.id+',true,this.value)"><option value="">پیڈ کریں ▾</option><option value="cash">کیش</option><option value="cheque">چیک</option><option value="bank">بینک ٹرانزیکشن</option></select> '):'')+(isStaff()?'<button class="btn ghost sm danger" onclick="delKh('+e.id+')">✕</button>':'')+'</td></tr>'}).join(""):'<tr><td colspan="5" class="empty">ابھی کوئی اندراج نہیں</td></tr>')
+   +'</tbody></table>'+k.days.map(function(d){return '<div class="dyl">'+dm(d)+' — ڈھلائی کا کل وزن: <b>'+nf(k.dk[d])+'</b> کلو</div>'}).join("")
+   +'<div class="kft"><span class="kr">کل ڈھلائی '+nf(k.out)+'</span>'+(k.paid?'<span>ادا شدہ '+nf(k.paid)+'</span>':'')+'<span>باقی '+nf(k.out-k.paid-k.inn)+'</span></div></div>'
+   +'<div class="row" style="margin-top:14px"><button class="btn" onclick="khGuard(khBill)">Download bill image</button><button class="btn ghost" onclick="khGuard(function(){printEl($(\'kbox\'),khParty())})">Print / Save PDF</button></div>';
+  return h;
+}
+function khGuard(fn){var d=["k3","k4","k5","k6"].some(function(i){var e=$(i);return e&&e.value!==""});if(d){alert("پہلے اندراج کو کھاتے میں محفوظ کریں، پھر بل بنائیں۔");return}fn()}
+function khPick(b){$("k3").value=b.textContent;[].forEach.call(document.querySelectorAll(".box.fl .chip"),function(c){c.classList.toggle("on",c===b)})}
+function khAuto(){var w=+$("k4").value,r=+$("k5").value;$("k6").value=w&&r?w*r:""}
+function khGo(d){khPage+=d;render(true)}
+function saveKh(){
+  api("POST","/api/khata",{customer_id:khId,date:$("k1").value,kind:"dilai",detail:$("k3").value,weight:$("k4").value,rate:$("k5").value,amount:$("k6").value})
+    .then(function(){khPage=Math.ceil((khRows.length+1)/KPER);return reload()}).catch(fail);
+}
+function khPaid(id,paid,pay){if(paid&&!pay)return;api("PATCH","/api/khata/"+id+"/paid",{paid:paid,pay:pay}).then(function(){return api("GET","/api/khata/"+khId)}).then(function(r){khRows=r;return reload()}).catch(fail)}
+function delKh(id){if(!confirm("حذف کریں؟"))return;api("DELETE","/api/khata/"+id).then(reload).catch(fail)}
+function khBill(){
+  var k=khCalc(),name=khParty(),F='"Noto Nastaliq Urdu","Noto Naskh Arabic",Tahoma,serif';
+  (document.fonts?document.fonts.load('20px "Noto Nastaliq Urdu"').catch(function(){}):Promise.resolve()).then(function(){
+    var W=800,RH=48,top=104,H=top+(k.rows.length+1)*RH+k.days.length*40+130;
+    var cv=document.createElement("canvas");cv.width=W*2;cv.height=H*2;var x=cv.getContext("2d");x.scale(2,2);
+    function T(t,px,y,col,al,b,sz){x.font=(b?"700 ":"400 ")+(sz||20)+"px "+F;x.fillStyle=col;x.textAlign=al;x.direction="rtl";x.fillText(t,px,y)}
+    x.fillStyle="#fff";x.fillRect(0,0,W,H);
+    x.fillStyle="#1B1A14";x.fillRect(0,0,W,80);
+    x.direction="ltr";x.font="800 24px Manrope,Arial,sans-serif";x.fillStyle="#fff";x.textAlign="left";x.fillText("ZECO",24,48);
+    T(name,W-24,40,"#fff","right",true,24);T("صفحہ نمبر "+khPage,W-24,72,"#A8A292","right",false,16);
+    x.fillStyle="#E6E2D5";x.fillRect(20,top-30,W-40,RH-8);
+    [["نمبر",750],["تفصیل",520],["وزن",260],["رقم",105]].forEach(function(c){T(c[0],c[1],top,"#26241D","center",true,18)});
+    k.rows.forEach(function(e,i){
+      var y=top+(i+1)*RH,col=e.kind=="dilai"?"#A6402C":"#2E6B4F";
+      T(String(k.st+i+1),750,y,col,"center");
+      T(khTxt(e)+"  "+dm(e.entry_date).slice(0,5),710,y,col,"right",false,18);
+      T(e.weight?nf(e.weight):"—",260,y,col,"center");T(nf(e.amount),105,y,col,"center");
+      x.fillStyle="#E6E2D5";x.fillRect(20,y+14,W-40,1);
+    });
+    var y=top+(k.rows.length+1)*RH;
+    k.days.forEach(function(d){T(dm(d)+" — ڈھلائی کا کل وزن: "+nf(k.dk[d])+" کلو",W-24,y,"#A6402C","right",false,17);y+=40});
+    x.fillStyle="#26241D";x.fillRect(20,y-8,W-40,2);y+=24;
+    T("کل ڈھلائی "+nf(k.out),W-24,y,"#A6402C","right",true,19);
+    if(k.paid)T("ادا شدہ "+nf(k.paid),W-24,y+44,"#2E6B4F","right",false,18);
+    T("باقی "+nf(k.out-k.paid-k.inn),W-24,y+(k.paid?88:44),"#26241D","right",true,21);
+    cv.toBlob(function(blob){
+      var fn="khata-"+name.replace(/[^\w\u0600-\u06FF-]+/g,"_")+"-page"+khPage+".png";
+      var use=window.claude&&claude.use?claude.use("downloads").catch(function(){return null}):Promise.resolve(null);
+      use.then(function(d){if(d)return d.save({filename:fn,data:blob});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;a.click()}).catch(function(){});
+    },"image/png");
+  });
+}
+function vCheq(){
+  var t=todayS(),lim=new Date(Date.now()+30*864e5).toISOString().slice(0,10),pend=cheques.filter(function(c){return c.status=="pending"});
+  var sum=function(l){return l.reduce(function(a,c){return a+c.amount},0)};
+  var h='<div class="stats"><div class="stat"><b>'+pend.length+'</b><span>Pending cheques</span></div><div class="stat"><b>'+rs(sum(pend))+'</b><span>Pending amount</span></div><div class="stat"><b>'+rs(sum(pend.filter(function(c){return c.cash_on<=lim})))+'</b><span>To pay within 30 days</span></div></div>';
+  if(!cheques.length)return h+'<div class="box"><div class="empty">No cheques yet. Click Add cheque.</div></div>';
+  return h+'<div class="box"><table><thead><tr><th>Party</th><th>Amount</th><th>Issued on</th><th>Cash-out date</th><th>Status</th><th></th></tr></thead><tbody>'+cheques.map(function(c){
+    var l=Math.round((new Date(c.cash_on)-new Date(t))/864e5),done=c.status=="cleared";
+    var tag=done?'<span class="tag s-delivered">Cleared</span>':l<0?'<span class="tag s-cancelled">Overdue '+(-l)+'d</span>':l<=7?'<span class="tag s-pending">'+(l?'In '+l+' days':'Today')+'</span>':'<span class="tag s-packed">In '+l+' days</span>';
+    return '<tr'+(done?' style="opacity:.6"':'')+'><td class="ur"><b>'+esc(c.party)+'</b></td><td>'+rs(c.amount)+'</td><td>'+dm(c.issued_on)+'</td><td>'+dm(c.cash_on)+'</td><td>'+tag+'</td><td><div class="act"><button class="btn ghost sm" onclick="chqSet('+c.id+',\''+(done?'pending':'cleared')+'\')">'+(done?'Reopen':'Mark cleared')+'</button>'+(isStaff()?'<button class="btn ghost sm danger" onclick="chqDel('+c.id+')">Delete</button>':'')+'</div></td></tr>'}).join("")+'</tbody></table></div>';
+}
+function chqSet(id,st){api("PATCH","/api/cheques/"+id+"/status",{status:st}).then(reload).catch(fail)}
+function chqDel(id){if(!confirm("Delete this cheque?"))return;api("DELETE","/api/cheques/"+id).then(reload).catch(fail)}
+
+// ---------- Print / download ----------
+function printEl(el,title){
+  var pa=document.createElement("div");pa.id="pa";
+  // every printout starts with the company logo (the bill already carries its own header, so it is not doubled)
+  if(!el.querySelector('img[src$="logo.jpg"]'))pa.innerHTML='<div class="phd"><img src="'+APP_BASE+'logo.jpg" alt=""><div><b>ZECO</b><br><span>'+esc(title)+' · '+dm(todayS())+'</span></div></div>';
+  pa.appendChild(el.cloneNode(true));document.body.appendChild(pa);document.body.classList.add("printing");
+  var done=function(){document.body.classList.remove("printing");if(pa.parentNode)pa.parentNode.removeChild(pa);window.removeEventListener("afterprint",done)};
+  window.addEventListener("afterprint",done);
+  // wait until the logo has really loaded, otherwise the print preview opens without it
+  var imgs=[].slice.call(pa.querySelectorAll("img")),left=imgs.length,fired=false;
+  var go=function(){if(fired)return;fired=true;setTimeout(function(){window.print()},50)};
+  if(!left)return go();
+  imgs.forEach(function(im){if(im.complete&&im.naturalWidth){if(!--left)go()}else{im.onload=im.onerror=function(){if(!--left)go()}}});
+  setTimeout(go,2000);
+}
+function saveBlob(blob,fn){var use=window.claude&&claude.use?claude.use("downloads").catch(function(){return null}):Promise.resolve(null);
+  use.then(function(d){if(d)return d.save({filename:fn,data:blob});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;a.click()}).catch(function(){})}
+function repBtns(){return '<div class="row" style="margin-top:14px"><button class="btn" onclick="printEl($(\'rep\'),\'Report\')">Print / Save PDF</button><button class="btn ghost" onclick="repCsv()">Download CSV (Excel)</button></div>'}
+function repCsv(){var r=rep,q=function(v){return '"'+String(v).replace(/"/g,'""')+'"'},L=[["Period",r.days?"last "+r.days+" days":"all time"],["Dhalai amount",r.dilai_amt],["Dhalai kg",r.dilai_kg],["Wasool",r.wasool],["Wapsi",r.wapsi],["Baqaya (all time)",r.balance],[],["Top parties","Dhalai amount"]];
+  r.parties.forEach(function(x){L.push([x.name,x.total])});L.push([],["Date","Dhalai kg"]);r.daily.forEach(function(x){L.push([dm(x.d),x.kg])});
+  L.push([],["Cheques pending",r.cheques.n],["Pending amount",r.cheques.amt],["Due within 30 days",r.cheques.soon],["Overdue",r.cheques.overdue]);
+  saveBlob(new Blob(["\ufeff"+L.map(function(a){return a.map(q).join(",")}).join("\r\n")],{type:"text/csv;charset=utf-8"}),"report-"+todayS()+".csv")}
+// ---------- Products: tap to choose, "+" adds a new product ----------
+function chipsHtml(pick,sel){return PRODUCTS.map(function(p){return '<button type="button" class="chip'+((pick=="gpPick"?gpIdx(p)>=0:p==sel)?' on':'')+'" onclick="'+pick+'(this)">'+esc(p)+'</button>'}).join("")+'<button type="button" class="chip" onclick="prodPlus()" aria-label="plus">＋</button>'}
+function chipBox(pick,sel){return '<div class="chips" id="chips" data-pick="'+pick+'">'+chipsHtml(pick,sel)+'</div><div class="row" id="pnew" hidden style="margin:-4px 0 12px"><input id="pn1" dir="auto" placeholder="نیا پروڈکٹ لکھیں" style="flex:1"><button type="button" class="btn" onclick="addProd()">شامل کریں</button></div>'}
+function prodPlus(){$("pnew").hidden=false;$("pn1").focus()}
+function addProd(){var n=$("pn1").value.trim();if(!n)return;
+  api("POST","/api/products",{name:n}).then(function(){if(PRODUCTS.indexOf(n)<0)PRODUCTS.push(n);$("pn1").value="";$("pnew").hidden=true;var c=$("chips");c.innerHTML=chipsHtml(c.dataset.pick,"");
+    var b=[].filter.call(c.querySelectorAll(".chip"),function(x){return x.textContent==n})[0];if(b)window[c.dataset.pick](b)}).catch(fail)}
+// ---------- Gate pass (گیٹ پاس) ----------
+var PRODUCTS=["ڈھلائی","پمپ","ہانڈی","کپ","پلے","نلکا","فلینج"],gps=[],gpProd="";   // Dhalai, Pump, Handi, Cup, Palay, Nalka, Flench
+var gpNo=function(id){return "GP-"+String(id).padStart(4,"0")};
+var gpItems=[];
+function gpIdx(n){for(var i=0;i<gpItems.length;i++)if(gpItems[i].p==n)return i;return -1}
+function gpTotal(){return gpItems.reduce(function(a,it){return a+(+it.k||0)},0)}
+function gpTot(){var t=$("gtot");if(t)t.textContent=nf(gpTotal())}
+function gpLines(){
+  var inp=function(i,f,v,id){return '<input'+(id?' id="'+id+'"':'')+' type="number" min="0" step="any" inputmode="decimal" value="'+v+'" oninput="gpSet('+i+',\''+f+'\',this.value)">'};
+  return gpItems.map(function(it,i){return '<div class="gl"><div class="gh"><b>'+esc(it.p)+'</b><button type="button" class="btn ghost sm danger" onclick="gpDel('+i+')">✕</button></div><div class="three"><div><label>تعداد</label>'+inp(i,"q",it.q)+'</div><div><label>ریٹ</label>'+inp(i,"r",it.r)+'</div><div><label>قیمت</label>'+inp(i,"k",it.k,"gk"+i)+'</div></div></div>'}).join("")
+    +(gpItems.length?'<div class="gt">کل قیمت: <b id="gtot">'+nf(gpTotal())+'</b></div>':'');
+}
+function gpDraw(){[].forEach.call(document.querySelectorAll("#chips .chip"),function(c){c.classList.toggle("on",gpIdx(c.textContent)>=0)});var l=$("gpl2");if(l)l.innerHTML=gpLines()}
+function gpPick(b){var n=b.textContent,i=gpIdx(n);if(i>=0)gpItems.splice(i,1);else gpItems.push({p:n,q:"",r:"",k:""});gpDraw()}
+function gpDel(i){gpItems.splice(i,1);gpDraw()}
+function gpSet(i,f,v){var it=gpItems[i];it[f]=v;if(f!="k"&&(+it.q)&&(+it.r)){it.k=String(Math.round(it.q*it.r*100)/100);$("gk"+i).value=it.k}gpTot()}
+function gpRows(g){return g.items&&g.items.length?g.items:[{product:g.product,qty:g.qty,rate:0,price:0}]}
+function vGate(){
+  var h='<div class="box ur fl" dir="rtl" lang="ur" style="padding:16px"><h3 style="margin:0 0 6px;font-size:16px">نیا گیٹ پاس</h3>'
+   +'<label>پارٹی کا نام</label><input id="g1" list="gpl" dir="auto" autocomplete="off" placeholder="نام لکھیں یا چنیں"><datalist id="gpl">'+customers.map(function(c){return '<option value="'+escA(c.name)+'">'}).join("")+'</datalist>'
+   +'<label>پروڈکٹ (ایک سے زیادہ چن سکتے ہیں)</label>'+chipBox("gpPick","")
+   +'<div id="gpl2">'+gpLines()+'</div>'
+   +'<label>گاڑی نمبر (اختیاری)</label><input id="g3" dir="ltr" autocomplete="off">'
+   +'<div class="row" style="margin-top:12px"><button class="btn" onclick="saveGate()">گیٹ پاس بنائیں</button></div></div>';
+  if(!gps.length)return h+'<div class="box ur" style="margin-top:14px"><div class="empty">ابھی کوئی گیٹ پاس نہیں</div></div>';
+  return h+'<div class="box ur" dir="rtl" lang="ur" style="margin-top:14px"><table><thead><tr><th>نمبر</th><th>تاریخ</th><th>پارٹی</th><th>پروڈکٹ</th><th>کل قیمت</th><th>گاڑی</th><th></th></tr></thead><tbody>'+gps.map(function(g){
+    return '<tr><td>'+gpNo(g.id)+'</td><td>'+dm(g.pass_date)+'</td><td><b>'+esc(g.party)+'</b></td><td>'+gpRows(g).map(function(i){return esc(i.product)+' × '+nf(i.qty)}).join("<br>")+'</td><td>'+(g.total?nf(g.total):"—")+'</td><td>'+esc(g.vehicle||"—")+'</td><td><div class="act"><button class="btn ghost sm" onclick="gpImage('+g.id+')">تصویر</button>'+(isStaff()?'<button class="btn ghost sm danger" onclick="delGate('+g.id+')">✕</button>':'')+'</div></td></tr>'}).join("")+'</tbody></table></div>';
+}
+function saveGate(){
+  var party=$("g1").value.trim(),items=gpItems.filter(function(it){return +it.q>0}).map(function(it){return {product:it.p,qty:+it.q,rate:+it.r||0,price:it.k===""?null:+it.k}});
+  if(!party||!items.length){alert("پارٹی کا نام لکھیں اور کم از کم ایک پروڈکٹ کی تعداد لکھیں");return}
+  api("POST","/api/gatepass",{party:party,vehicle:$("g3").value,date:todayS(),items:items}).then(function(){gpItems=[];return reload()}).catch(fail);
+}
+function delGate(id){if(!confirm("حذف کریں؟"))return;api("DELETE","/api/gatepass/"+id).then(reload).catch(fail)}
+function saveCv(cv,fn){cv.toBlob(function(blob){var use=window.claude&&claude.use?claude.use("downloads").catch(function(){return null}):Promise.resolve(null);
+  use.then(function(d){if(d)return d.save({filename:fn,data:blob});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;a.click()}).catch(function(){})},"image/png")}
+function gpImage(id){
+  var g=gps.filter(function(x){return x.id==id})[0];if(!g)return;var items=gpRows(g);
+  (document.fonts?document.fonts.load('20px "Noto Nastaliq Urdu"').catch(function(){}):Promise.resolve()).then(function(){
+    var W=800,RH=52,tt=g.vehicle?340:280,H=tt+(items.length+1)*RH+190,F='"Noto Nastaliq Urdu","Noto Naskh Arabic",Tahoma,serif',cv=document.createElement("canvas");cv.width=W*2;cv.height=H*2;var x=cv.getContext("2d");x.scale(2,2);
+    function T(t,px,y,col,al,b,sz){x.font=(b?"700 ":"400 ")+(sz||22)+"px "+F;x.fillStyle=col;x.textAlign=al;x.direction="rtl";x.fillText(t,px,y)}
+    x.fillStyle="#fff";x.fillRect(0,0,W,H);x.fillStyle="#1B1E22";x.fillRect(0,0,W,86);
+    x.direction="ltr";x.font="800 26px Manrope,Arial,sans-serif";x.fillStyle="#fff";x.textAlign="left";x.fillText("ZECO",24,52);
+    T("گیٹ پاس",W-24,54,"#fff","right",true,28);
+    T("نمبر: "+gpNo(g.id),W-24,138,"#D71C2A","right",true,20);T("تاریخ: "+dm(g.pass_date),24,138,"#16191D","left",false,20);
+    T("پارٹی",W-24,200,"#5D6670","right",false,20);T(g.party,W-170,200,"#16191D","right",true,26);x.fillStyle="#D5D9DE";x.fillRect(24,216,W-48,1);
+    if(g.vehicle){T("گاڑی نمبر",W-24,262,"#5D6670","right",false,20);T(g.vehicle,W-170,262,"#16191D","right",true,24);x.fillStyle="#D5D9DE";x.fillRect(24,278,W-48,1)}
+    x.fillStyle="#E6E2D5";x.fillRect(24,tt-34,W-48,RH-8);
+    [["پروڈکٹ",W-40,"right"],["تعداد",450,"center"],["ریٹ",320,"center"],["قیمت",140,"center"]].forEach(function(c){T(c[0],c[1],tt,"#26241D",c[2],true,18)});
+    items.forEach(function(it,i){var y=tt+(i+1)*RH;
+      T(it.product,W-40,y,"#16191D","right",false,22);T(nf(it.qty),450,y,"#16191D","center");T(it.rate?nf(it.rate):"—",320,y,"#16191D","center");T(it.price?nf(it.price):"—",140,y,"#16191D","center");
+      x.fillStyle="#E6E2D5";x.fillRect(24,y+14,W-48,1)});
+    var y=tt+(items.length+1)*RH+30;
+    if(g.total)T("کل قیمت: "+nf(g.total),W-24,y,"#D71C2A","right",true,24);
+    x.fillStyle="#16191D";x.fillRect(60,H-72,200,1);x.fillRect(W-260,H-72,200,1);
+    T("گیٹ کیپر",160,H-34,"#5D6670","center",false,18);T("وصول کنندہ",W-160,H-34,"#5D6670","center",false,18);
+    saveCv(cv,"gatepass-"+gpNo(g.id)+".png");
+  });
+}
+// ---------- Bill (کھاتہ بل): party, date, lines (تفصیل / کلو / ریٹ / رقم), totals, image / print ----------
+var bl=null;
+function blGet(){if(!bl){try{bl=JSON.parse(localStorage.getItem("zeco_bill")||"null")}catch(e){}}if(!bl||!bl.rows)bl={party:"",date:todayS(),mode:"",pay:"",rows:[{t:"",kg:"",rate:"",amt:""}]};return bl}
+function blSave(){try{localStorage.setItem("zeco_bill",JSON.stringify(bl))}catch(e){}}
+function blAmt(r){return r.amt!==""&&r.amt!=null?(+r.amt||0):(+r.kg||0)*(+r.rate||0)}
+function blTot(){var b=blGet();return {kg:b.rows.reduce(function(a,r){return a+(+r.kg||0)},0),amt:b.rows.reduce(function(a,r){return a+blAmt(r)},0)}}
+function blRows(){return blGet().rows.map(function(r,i){
+  var inp=function(f,v,ph,id){return '<input'+(id?' id="'+id+'"':'')+' type="number" min="0" step="any" inputmode="decimal" value="'+escA(v)+'" placeholder="'+ph+'" oninput="blSet('+i+',\''+f+'\',this.value)">'};
+  return '<div class="gl"><div class="gh"><b>'+(i+1)+'</b><button type="button" class="btn ghost sm danger" onclick="blDel('+i+')">✕</button></div><label>تفصیل</label><input dir="auto" value="'+escA(r.t)+'" oninput="blSet('+i+',\'t\',this.value)"><div class="three"><div><label>کلو</label>'+inp("kg",r.kg,"")+'</div><div><label>ریٹ</label>'+inp("rate",r.rate,"")+'</div><div><label>رقم</label>'+inp("amt",r.amt,nf(blAmt(r)),"ba"+i)+'</div></div></div>'}).join("")}
+function blPaperHtml(){var b=blGet(),t=blTot(),rows=b.rows.filter(function(r){return r.t||r.kg||r.rate||r.amt});
+  return '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#1B1E22;color:#fff"><img src="'+APP_BASE+'logo.jpg" alt="" style="width:44px;height:44px;border-radius:50%"><div><b>ZECO</b><br><small>کھاتہ بل</small></div></div>'
+   +'<div style="display:flex;justify-content:space-between;padding:8px 14px"><b>'+esc(b.party||"پارٹی کا نام")+'</b><span>'+dm(b.date)+'</span></div>'
+   +'<table><thead><tr><th>تفصیل</th><th>کلو</th><th>ریٹ</th><th>رقم</th></tr></thead><tbody>'+rows.map(function(r){return '<tr><td class="dt">'+(esc(r.t)||"—")+'</td><td>'+(r.kg?nf(r.kg):"—")+'</td><td>'+(r.rate?nf(r.rate):"—")+'</td><td>'+nf(blAmt(r))+'</td></tr>'}).join("")+'</tbody></table>'
+   +'<div class="kft"><span>کل وزن '+nf(t.kg)+'</span><span>کل رقم '+nf(t.amt)+'</span></div>'+blStatusHtml()}
+var BPAY={cash:"کیش",cheque:"چیک",bank:"بینک ٹرانزیکشن"};
+function blStatusTxt(){var b=blGet();return b.mode=="paid"?"پیڈ"+(b.pay?" — "+BPAY[b.pay]:""):(b.mode=="khata"?"کھاتے میں":"")}
+function blStatusHtml(){var t=blStatusTxt();return t?'<div style="padding:8px 14px;font-weight:700;border-top:1px dashed var(--line)">'+t+'</div>':''}
+function blRefresh(){var t=blTot();$("bpaper").innerHTML=blPaperHtml();$("btk").textContent=nf(t.kg);$("bta").textContent=nf(t.amt);blSave()}
+function blSet(i,f,v){var r=blGet().rows[i];r[f]=v;var a=$("ba"+i);if(a)a.placeholder=nf(blAmt(r));blRefresh()}
+function blHead(){var b=blGet();b.party=$("b1").value;b.date=$("b2").value;blRefresh()}
+function blRedraw(){$("brows").innerHTML=blRows();blRefresh()}
+function blAdd(){blGet().rows.push({t:"",kg:"",rate:"",amt:""});blRedraw();var l=document.querySelectorAll("#brows .gl");l[l.length-1].querySelector("input[dir]").focus()}
+function blPick(b){var rs0=blGet().rows,r=rs0[rs0.length-1];if(rs0.length==1&&!r.t&&!r.kg&&!r.rate&&!r.amt)r.t=b.textContent;else rs0.push({t:b.textContent,kg:"",rate:"",amt:""});blRedraw()}
+function blDel(i){var b=blGet();b.rows.splice(i,1);if(!b.rows.length)b.rows.push({t:"",kg:"",rate:"",amt:""});blRedraw()}
+function blNew(){if(!confirm("موجودہ بل صاف کر دیں؟"))return;bl=null;try{localStorage.removeItem("zeco_bill")}catch(e){}render()}
+function blModeDraw(){var b=blGet(),m=$("bmode"),p=$("bpay");if(!m)return;
+  m.innerHTML=[["khata","کھاتہ"],["paid","پیڈ"]].map(function(x){return '<button type="button" class="chip'+(b.mode==x[0]?' on':'')+'" onclick="blMode(\''+x[0]+'\')">'+x[1]+'</button>'}).join("");
+  p.innerHTML=b.mode=="paid"?'<label>ادائیگی کیسے ہوئی</label><div class="chips">'+[["cash","کیش"],["cheque","چیک"],["bank","بینک ٹرانزیکشن"]].map(function(x){return '<button type="button" class="chip'+(b.pay==x[0]?' on':'')+'" onclick="blPay(\''+x[0]+'\')">'+x[1]+'</button>'}).join("")+'</div>':''}
+function blMode(m){var b=blGet();b.mode=m;if(m!="paid")b.pay="";blModeDraw();blRefresh()}
+function blPay(k){blGet().pay=k;blModeDraw();blRefresh()}
+function blSaveKhata(){var b=blGet(),name=b.party.trim();
+  if(!name){alert("پارٹی کا نام لکھیں");return}
+  if(!b.mode){alert("کھاتہ یا پیڈ میں سے ایک چنیں");return}
+  if(b.mode=="paid"&&!b.pay){alert("کیش، چیک یا بینک ٹرانزیکشن چنیں");return}
+  var c=customers.filter(function(x){return x.name==name})[0];   // an existing party is used; a new name is created automatically
+  api("POST","/api/khata/bill",{customer_id:c?c.id:0,party:name,date:b.date,mode:b.mode,pay:b.pay,rows:b.rows.map(function(r){return {t:r.t,kg:r.kg,rate:r.rate,amt:r.amt===""?(+r.kg||0)*(+r.rate||0):r.amt}})})
+    .then(function(r){alert(r.created?"نئی پارٹی بن گئی اور بل کھاتے میں محفوظ ہو گیا":"بل کھاتے میں محفوظ ہو گیا");bl=null;try{localStorage.removeItem("zeco_bill")}catch(e){}return reload().then(function(){openKhata(r.customer_id)})}).catch(fail)}
+function vBill(){var b=blGet();setTimeout(blModeDraw,0);
+  return '<div class="box ur fl" dir="rtl" lang="ur" style="padding:16px"><h3 style="margin:0 0 6px;font-size:16px">کھاتہ بل</h3>'
+   +'<div class="two"><div><label>پارٹی کا نام</label><input id="b1" list="gpl" dir="auto" autocomplete="off" placeholder="نام لکھیں یا چنیں — نیا نام خود بن جائے گا" value="'+escA(b.party)+'" oninput="blHead()"><datalist id="gpl">'+customers.map(function(c){return '<option value="'+escA(c.name)+'">'}).join("")+'</datalist></div><div><label>تاریخ</label><input id="b2" type="date" value="'+escA(b.date)+'" oninput="blHead()"></div></div>'
+   +'<label>پروڈکٹ (ٹیپ کریں، لائن بن جائے گی)</label>'+chipBox("blPick","")
+   +'<div id="brows">'+blRows()+'</div><div class="row"><button type="button" class="btn ghost" onclick="blAdd()">+ نئی اندراج</button></div>'
+   +'<label>بل کا طریقہ</label><div class="chips" id="bmode"></div><div id="bpay"></div>'
+   +'<div class="row" style="margin:10px 0"><button type="button" class="btn" onclick="blSaveKhata()">بل محفوظ کریں</button></div>'
+   +'<div class="gt">کل وزن: <b id="btk">'+nf(blTot().kg)+'</b> · کل رقم: <b id="bta">'+nf(blTot().amt)+'</b></div></div>'
+   +'<h3 class="ur" style="margin:16px 0 6px">بل کی تصویر</h3><div id="bpaper" class="box ur" dir="rtl" lang="ur">'+blPaperHtml()+'</div>'
+   +'<div class="row" style="margin-top:14px"><button class="btn" onclick="blImage()">Download bill image</button><button class="btn ghost" onclick="printEl($(\'bpaper\'),\'Bill\')">Print / Save PDF</button><button class="btn ghost" onclick="blNew()">New bill</button></div>';
+}
+function blImage(){
+  var b=blGet(),t=blTot(),rows=b.rows.filter(function(r){return r.t||r.kg||r.rate||r.amt});
+  (document.fonts?document.fonts.load('20px "Noto Nastaliq Urdu"').catch(function(){}):Promise.resolve()).then(function(){
+    var W=800,RH=52,tt=230,H=tt+(rows.length+1)*RH+220,F='"Noto Nastaliq Urdu","Noto Naskh Arabic",Tahoma,serif',cv=document.createElement("canvas");cv.width=W*2;cv.height=H*2;var x=cv.getContext("2d");x.scale(2,2);
+    function T(s0,px,y,col,al,bo,sz){x.font=(bo?"700 ":"400 ")+(sz||22)+"px "+F;x.fillStyle=col;x.textAlign=al;x.direction="rtl";x.fillText(s0,px,y)}
+    x.fillStyle="#fff";x.fillRect(0,0,W,H);x.fillStyle="#1B1E22";x.fillRect(0,0,W,86);
+    x.direction="ltr";x.font="800 26px Manrope,Arial,sans-serif";x.fillStyle="#fff";x.textAlign="left";x.fillText("ZECO",24,52);
+    T("کھاتہ بل",W-24,54,"#fff","right",true,28);
+    T(b.party||"پارٹی",W-24,138,"#16191D","right",true,26);T(dm(b.date),24,138,"#5D6670","left",false,20);
+    x.fillStyle="#E6E2D5";x.fillRect(24,tt-34,W-48,RH-8);
+    [["تفصیل",W-40,"right"],["کلو",450,"center"],["ریٹ",320,"center"],["رقم",140,"center"]].forEach(function(c){T(c[0],c[1],tt,"#26241D",c[2],true,18)});
+    rows.forEach(function(r,i){var y=tt+(i+1)*RH;T(r.t||"—",W-40,y,"#16191D","right",false,22);T(r.kg?nf(r.kg):"—",450,y,"#16191D","center");T(r.rate?nf(r.rate):"—",320,y,"#16191D","center");T(nf(blAmt(r)),140,y,"#16191D","center");x.fillStyle="#E6E2D5";x.fillRect(24,y+14,W-48,1)});
+    var y=tt+(rows.length+1)*RH+30;x.fillStyle="#26241D";x.fillRect(24,y-30,W-48,2);
+    T("کل وزن: "+nf(t.kg)+" کلو",W-24,y+16,"#16191D","right",true,22);T("کل رقم: "+nf(t.amt),W-24,y+66,"#D71C2A","right",true,26);if(blStatusTxt())T(blStatusTxt(),W-24,y+116,"#26241D","right",true,22);
+    saveCv(cv,"ZECO-bill-"+(b.party||"khata").replace(/[^\w\u0600-\u06FF-]+/g,"_")+"-"+(b.date||todayS())+".png");
+  });
+}
+// ---------- Urdu on-screen keyboard: opens by itself on every text field (Urdu is always the default) ----------
+var vkOn=true,vkL=0,vkT=null;
+try{vkOn=localStorage.getItem("zeco_vk")!=="0"}catch(e){}
+var VK=[[["ق","و","ع","ر","ت","ے","ء","ی","ہ","پ"],["ا","س","د","ف","گ","ھ","ج","ک","ل","چ"],["ز","ش","ط","ب","ن","م","خ","ح","غ","ذ"]],
+        [["ٹ","ڈ","ڑ","ں","ث","ض","ظ","ژ","ئ","ؤ"],["آ","ۃ","ۓ","ً","ٔ","،","۔","؟","!","-"],["0","1","2","3","4","5","6","7","8","9"]]];
+function isUr(t){return !!(t&&t.matches&&t.matches('input[dir="auto"],textarea[dir="auto"]'))}
+function vkDraw(){var h="";VK[vkL].forEach(function(r){h+='<div class="r">'+r.map(function(c){return '<button type="button" data-k="'+c+'">'+c+'</button>'}).join("")+'</div>'});
+  h+='<div class="r"><button type="button" class="m" data-a="lay">'+(vkL?"ا ب پ":"ٹ ڈ ۱")+'</button><button type="button" class="m" data-a="en">EN</button><button type="button" class="w" data-k=" ">اسپیس</button><button type="button" class="m" data-a="bs">⌫</button><button type="button" class="m" data-a="ok">✓</button></div>';$("vk").innerHTML=h}
+function vkShow(t){vkT=t;t.setAttribute("inputmode","none");t.setAttribute("lang","ur");var host=t.closest("dialog")||document.body,k=$("vk");
+  if(k.parentNode!==host)host.appendChild(k);k.classList.add("on");document.body.classList.add("vkb");setTimeout(function(){try{t.scrollIntoView({block:"center",behavior:"smooth"})}catch(e){}},80)}
+function vkHide(){$("vk").classList.remove("on");document.body.classList.remove("vkb")}
+function vkEdit(f){var t=vkT,s=t.selectionStart,e=t.selectionEnd;if(s==null){s=e=t.value.length}var r=f(t.value,s,e);t.value=r[0];try{t.setSelectionRange(r[1],r[1])}catch(x){}t.dispatchEvent(new Event("input",{bubbles:true}))}
+function vkToggle(){vkOn=!vkOn;try{localStorage.setItem("zeco_vk",vkOn?"1":"0")}catch(e){}
+  var t=vkT&&document.contains(vkT)?vkT:document.activeElement;vkHide();
+  if(isUr(t)){if(vkOn)vkShow(t);else{t.removeAttribute("inputmode");t.blur();t.focus()}}vkLabel()}
+function vkLabel(){var b=$("vkt");if(b)b.textContent=vkOn?"Urdu keyboard: On":"Urdu keyboard: Off"}
+$("vk").addEventListener("pointerdown",function(e){
+  e.preventDefault();var b=e.target.closest("button");if(!b||!vkT)return;var a=b.dataset.a;
+  if(a=="bs")vkEdit(function(v,s,x){if(s==x){if(!s)return[v,0];s--}return[v.slice(0,s)+v.slice(x),s]});
+  else if(a=="lay"){vkL=1-vkL;vkDraw()}else if(a=="ok"){vkT.blur();vkHide()}else if(a=="en")vkToggle();
+  else if(b.dataset.k!=null){var c=b.dataset.k;vkEdit(function(v,s,x){return[v.slice(0,s)+c+v.slice(x),s+c.length]})}});
+$("vk").addEventListener("mousedown",function(e){e.preventDefault()});
+document.addEventListener("pointerdown",function(e){if(vkOn&&isUr(e.target))e.target.setAttribute("inputmode","none")},true);
+document.addEventListener("focusin",function(e){if(vkOn&&isUr(e.target))vkShow(e.target)});
+document.addEventListener("focusout",function(){setTimeout(function(){if(!isUr(document.activeElement))vkHide()},150)});
+vkDraw();
+
+function vUsers(){
+  if(!users.length)return '<div class="box"><div class="empty">No users.</div></div>';
+  return '<div class="stats"><div class="stat"><b>'+users.length+'</b><span>Total accounts</span></div></div><div class="box"><table><thead><tr><th>Username</th><th>Name</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>'+users.map(function(u){
+    var self=u.id==me.id;
+    return '<tr><td><b>'+esc(u.username)+'</b>'+(self?' <small style="color:var(--mute)">(you)</small>':'')+'</td><td>'+esc(u.name)+'</td><td><span class="tag t-'+u.role+'">'+ROLE_LABEL[u.role]+'</span></td><td><span class="tag '+(u.active?'t-vip':'t-off')+'">'+(u.active?'Active':'Disabled')+'</span>'+(u.must_change?' <small style="color:var(--mute)">password change pending</small>':'')+'</td><td><div class="act"><button class="btn ghost sm" onclick="openForm(\'Users\','+u.id+')">Edit</button>'+(self?'':'<button class="btn ghost sm danger" onclick="delUser('+u.id+')">Delete</button>')+'</div></td></tr>'}).join("")+'</tbody></table></div><p style="color:var(--mute);font-size:13px">Super admin: everything + manage accounts. Admin: can change CRM data. User: can only add customers / orders and change order status (no Reports).</p>';
+}
+function delUser(id){
+  var u=users.filter(function(x){return x.id==id})[0];
+  if(!u||!confirm("Delete the account of "+u.username+"?"))return;
+  api("DELETE","/api/users/"+id).then(reload).catch(fail);
+}
+
+function showPwForm(force){
+  pwForced=!!force;formKind="Password";
+  $("frm").innerHTML='<h2 style="margin:0 0 6px;font-size:18px">'+(force?"Create a new password":"Change password")+'</h2>'+(force?'<p style="margin:0;color:var(--mute);font-size:13px">You must change your password before continuing.</p>':'')+'<label>Current password</label><input id="p1" type="password" required autocomplete="current-password"><label>New password</label><input id="p2" type="password" required autocomplete="new-password"><label>Repeat new password</label><input id="p3" type="password" required autocomplete="new-password"><p class="note" style="color:var(--mute)">At least 8 characters with letters and numbers.</p><p class="err" id="ferr"></p><div class="row" style="margin-top:16px;justify-content:flex-end">'+(force?'':'<button class="btn ghost" value="cancel" formnovalidate>Cancel</button>')+'<button class="btn" value="ok">Save password</button></div>';
+  if(!$("dlg").open)$("dlg").showModal();
+}
+$("dlg").addEventListener("cancel",function(e){if(pwForced)e.preventDefault()});
+
+function openForm(kind,id){formKind=kind||tab;editId=id||0;
+  var f=$("frm"),btns=function(label){return '<div class="row" style="margin-top:16px;justify-content:flex-end"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">'+label+'</button></div>'};
+  if(formKind=="Parties"){
+    var c=editId?customers.filter(function(x){return x.id==editId})[0]:{name:"",phone:"",city:""};
+    f.innerHTML='<h2 style="margin:0 0 6px;font-size:18px">'+(editId?"Edit party":"Add party")+'</h2><label>Name</label><input id="f1" dir="auto" required value="'+escA(c.name)+'"><label>Phone (optional)</label><input id="f2" value="'+escA(c.phone)+'"><label>City</label><input id="f3" dir="auto" value="'+escA(c.city)+'">'+btns("Save party");
+  }else if(formKind=="Users"){
+    var u=editId?users.filter(function(x){return x.id==editId})[0]:{username:"",name:"",role:"user",active:1},selfEdit=editId&&editId==me.id;
+    f.innerHTML='<h2 style="margin:0 0 6px;font-size:18px">'+(editId?"Edit user":"Add user")+'</h2><label>Username</label><input id="u1" required autocomplete="off" '+(editId?'disabled':'')+' value="'+escA(u.username)+'"><label>Name</label><input id="u2" required value="'+escA(u.name)+'"><label>Role</label><select id="u3"'+(selfEdit?' disabled':'')+'>'+["user","admin","super_admin"].map(function(r){return '<option value="'+r+'"'+(r==u.role?' selected':'')+'>'+ROLE_LABEL[r]+'</option>'}).join("")+'</select>'+(editId?'<label>Status</label><select id="u5"'+(selfEdit?' disabled':'')+'><option value="1"'+(u.active?' selected':'')+'>Active</option><option value="0"'+(u.active?'':' selected')+'>Disabled (cannot log in)</option></select>':'')+'<label>'+(editId?'New password (empty = keep current)':'Password')+'</label><input id="u4" autocomplete="new-password" '+(editId?'':'required')+'><p class="note" style="color:var(--mute)">At least 8 characters with letters and numbers. The user must change this password at first login.</p><p class="err" id="ferr"></p>'+btns("Save user");
+  }else if(formKind=="Cheques"){
+    f.innerHTML='<h2 style="margin:0 0 6px;font-size:18px">Add cheque</h2><label>Party (payee)</label><input id="f1" dir="auto" required><label>Amount (Rs)</label><input id="f2" type="number" min="1" required><label>Date issued</label><input id="f3" type="date" value="'+todayS()+'"><label>Cash-out date</label><input id="f4" type="date" required>'+btns("Save cheque");
+  }
+  $("dlg").showModal();
+}
+$("frm").addEventListener("submit",function(e){
+  var v=e.submitter&&e.submitter.value;if(v!=="ok")return;
+  var p;
+  if(formKind=="Password"){
+    e.preventDefault();
+    if($("p2").value!==$("p3").value){$("ferr").textContent="The two new passwords do not match.";return}
+    api("POST","/api/change-password",{current:$("p1").value,next:$("p2").value})
+      .then(function(){pwForced=false;if(me)me.must_change=false;$("dlg").close();return reload()})
+      .catch(function(err){$("ferr").textContent=err.message});
+    return;
+  }
+  if(formKind=="Users"){
+    e.preventDefault();
+    var ub={name:$("u2").value,role:$("u3").value};
+    if(editId){if($("u5"))ub.active=$("u5").value=="1";if($("u4").value)ub.password=$("u4").value}
+    else{ub.username=$("u1").value;ub.password=$("u4").value}
+    (editId?api("PUT","/api/users/"+editId,ub):api("POST","/api/users",ub))
+      .then(function(){$("dlg").close();return reload()})
+      .catch(function(err){$("ferr").textContent=err.message});
+    return;
+  }
+  if(formKind=="Parties"){
+    var b={name:$("f1").value,phone:$("f2").value,city:$("f3").value};
+    p=editId?api("PUT","/api/customers/"+editId,b):api("POST","/api/customers",b);
+  }else if(formKind=="Cheques"){
+    p=api("POST","/api/cheques",{party:$("f1").value,amount:+$("f2").value,issued_on:$("f3").value,cash_on:$("f4").value});
+  }
+  p.then(reload).catch(fail);
+});
+window.addEventListener("hashchange",function(){var t=location.hash.slice(1);var m=TABS.filter(function(x){return slug(x)==t})[0];if(m&&m!=tab){tab=m;q="";render()}});
+function showLogin(msg){
+  me=null;customers=[];rep=null;users=[];loaded=false;pwForced=false;TABS=[];
+  $("view").innerHTML="";$("who").innerHTML="";$("nav").innerHTML="";$("tools").innerHTML="";$("title").textContent="";
+  if($("dlg").open)$("dlg").close();
+  $("login").style.display="flex";$("lbox").style.display="block";
+  $("lerr").textContent=msg||"";$("lu").focus();
+}
+function startApp(u){
+  me=u;TABS=ROLE_TABS[u.role]||ROLE_TABS.user;
+  var t=location.hash.slice(1),m=TABS.filter(function(x){return slug(x)==t})[0];
+  tab=m||"Khata";loaded=false;
+  $("login").style.display="none";
+  $("who").innerHTML='<b>'+esc(u.name)+'</b><span>'+ROLE_LABEL[u.role]+' &middot; '+esc(u.username)+'</span><button class="btn ghost sm" id="vkt" onclick="vkToggle()"></button><button class="btn ghost sm" onclick="showPwForm(false)">Change password</button><button class="btn ghost sm" onclick="logout()">Logout</button>';
+  render();vkLabel();
+  if(u.must_change)showPwForm(true);else reload();
+}
+function logout(){api("POST","/api/logout").catch(function(){}).then(function(){showLogin()})}
+$("lfrm").addEventListener("submit",function(e){
+  e.preventDefault();$("lerr").textContent="";
+  api("POST","/api/login",{username:$("lu").value.trim(),password:$("lp").value})
+    .then(function(u){$("lp").value="";startApp(u)})
+    .catch(function(err){$("lp").value="";$("lerr").textContent=err.message});
+});
+api("GET","/api/me").then(startApp).catch(function(){showLogin()});
+</script>
+</body>
+</html>

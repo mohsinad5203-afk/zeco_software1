@@ -1,0 +1,10 @@
+{
+  "name": "zeco-factory-crm",
+  "version": "1.0.0",
+  "description": "ZECO Factory CRM - khata, gate pass, cheques (Node.js + SQLite, no dependencies)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "reset-admin": "node scripts/reset-admin.js" },
+  "engines": { "node": ">=22.5.0" },
+  "license": "UNLICENSED",
+  "private": true
+}
